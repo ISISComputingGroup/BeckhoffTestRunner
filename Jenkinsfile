@@ -41,6 +41,7 @@ pipeline {
     stage("Build") {
       steps {
         bat """
+		    git clone PLC_solution --single-branch --branch ${env.BRANCH_NAME} https://github.com/ISISComputingGroup/BeckhoffPLCCode.git
             build.bat
             """
         }
