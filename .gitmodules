@@ -1,0 +1,4 @@
+[submodule "PLC_solution"]
+	path = PLC_solution
+	url = https://bitbucket.org/europeanspallationsource/tc_generic_structure.git
+    branch = integration
