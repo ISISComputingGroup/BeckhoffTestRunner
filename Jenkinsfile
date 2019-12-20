@@ -29,7 +29,8 @@ pipeline {
     stage("Build") {
       steps {
         bat """
-            git submodule update --init --recursive --remote
+            // Current latest version of ESS code has missing library
+            //git submodule update --init --recursive --remote
             build.bat
             """
         }
