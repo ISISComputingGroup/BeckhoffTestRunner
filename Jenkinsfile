@@ -41,7 +41,8 @@ pipeline {
     stage("Build") {
       steps {
         bat """
-            git submodule update --init --recursive
+            // This command will update us to the latest version but can't use currently as latest ESS code is broken
+            // git submodule update --init --recursive --remote
             build.bat
             """
         }
