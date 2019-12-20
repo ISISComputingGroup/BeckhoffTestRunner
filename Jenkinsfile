@@ -41,7 +41,7 @@ pipeline {
     stage("Build") {
       steps {
         bat """
-		    git clone --single-branch --branch Ticket5052_refactor_test_runner https://github.com/ISISComputingGroup/BeckhoffPLCCode.git PLC_solution
+            git submodule update --init --recursive --remote
             build.bat
             """
         }

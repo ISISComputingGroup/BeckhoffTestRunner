@@ -1,0 +1,4 @@
+[submodule "old_ISIS_code"]
+    path = PLC_solution
+    url = https://github.com/ISISComputingGroup/BeckhoffPLCCode.git
+    branch = Ticket5052_refactor_test_runner
