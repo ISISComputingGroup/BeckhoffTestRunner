@@ -41,6 +41,7 @@ pipeline {
     stage("Build") {
       steps {
         bat """
+            git submodule update --init --recursive --remote
             build.bat
             """
         }
