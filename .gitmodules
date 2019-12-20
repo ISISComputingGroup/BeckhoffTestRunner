@@ -1,4 +1,4 @@
 [submodule "dummy_plc"]
 	path = PLC_solution
 	url = https://github.com/ISISComputingGroup/BeckhoffPLCCode.git
-	branch = dummy_plc
+	branch = dummy_PLC
