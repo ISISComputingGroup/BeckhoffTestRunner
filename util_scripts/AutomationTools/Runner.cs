@@ -113,9 +113,21 @@ namespace AutomationTools
         /// </summary>
         /// <param name="systemManager">The system manager to get the app from.</param>
         /// <returns>The PLC app</returns>
-        private ITcSmTreeItem getPLCApp(ITcSysManager4 systemManager)
+        private ITcSmTreeItem getPLCApp(ITcSysManager4 systemManager, String plcName = null)
         {
-            IEnumerable<ITcSmTreeItem> plcConfigs = systemManager.LookupTreeItem("TIPC").Child[1].Cast<ITcSmTreeItem>();
+            ITcSmTreeItem plcConfig = systemManager.LookupTreeItem("TIPC");
+            ITcSmTreeItem PLCtoUse = null;
+            if (plcName == null) {
+                // If no specific PLC is specified, use the first one
+                PLCtoUse = plcConfig.Child[1];
+            } else {
+                foreach(ITcSmTreeItem PLCProject in plcConfig) {
+                    if (PLCProject.Name == plcName) {
+                        PLCtoUse = PLCProject;
+                    }
+                }
+            }
+            IEnumerable<ITcSmTreeItem> plcConfigs = PLCtoUse.Cast<ITcSmTreeItem>();
             return plcConfigs.Where(child => child.ItemSubTypeName == "TREEITEMTYPE_PLCAPP").Single();
         }
 
@@ -147,12 +159,12 @@ namespace AutomationTools
         /// <summary>
         /// Checks that a solution contains at least one PLC project and starts the project running.
         /// </summary>
-        public Boolean startPLC()
+        public Boolean startPLC(String plcName = null)
         {
-            Console.WriteLine("Starting " + project.Name);
             ITcSysManager4 systemManager = (ITcSysManager4)(project.Object);
+            ITcSmTreeItem plcApp = getPLCApp(systemManager, plcName);
 
-            ITcSmTreeItem plcApp = getPLCApp(systemManager);
+            Console.WriteLine("Starting " + plcApp.Name);
 
             System.Threading.Thread.Sleep(1000);
             if (!login(plcApp))
