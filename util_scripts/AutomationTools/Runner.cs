@@ -115,18 +115,23 @@ namespace AutomationTools
         /// <returns>The PLC app</returns>
         private ITcSmTreeItem getPLCApp(ITcSysManager4 systemManager, String plcName = null)
         {
+			
             ITcSmTreeItem plcConfig = systemManager.LookupTreeItem("TIPC");
             ITcSmTreeItem PLCtoUse = null;
             if (plcName == null) {
-                // If no specific PLC is specified, use the first one
+                Console.WriteLine("No PLC specified, logging into first one");
                 PLCtoUse = plcConfig.Child[1];
             } else {
+				Console.WriteLine("Attempting to find " + plcName + "PLC");
                 foreach(ITcSmTreeItem PLCProject in plcConfig) {
                     if (PLCProject.Name == plcName) {
                         PLCtoUse = PLCProject;
                     }
                 }
             }
+			if (PLCtoUse == null) {
+				Console.WriteLine(plcName + " PLC not found!!!!");
+			}
             IEnumerable<ITcSmTreeItem> plcConfigs = PLCtoUse.Cast<ITcSmTreeItem>();
             return plcConfigs.Where(child => child.ItemSubTypeName == "TREEITEMTYPE_PLCAPP").Single();
         }
