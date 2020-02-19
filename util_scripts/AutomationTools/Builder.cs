@@ -60,6 +60,16 @@ namespace AutomationTools
         }
 
         /// <summary>
+        /// Sets the PLC project to autostart on boot. This is required for automated testing.
+        /// </summary>
+        /// <param name="project">The project to set to autoboot.</param>
+        private void setProjectToBoot(ITcPlcProject project)
+        {
+            project.BootProjectAutostart = true;
+            project.GenerateBootProject(true);
+        }
+
+        /// <summary>
         /// Checks that a solution contains at least one PLC project.
         /// </summary>
         /// <returns>The project that can be run</returns> 
@@ -71,10 +81,12 @@ namespace AutomationTools
                 {
                     ITcSysManager4 twinCatProject = (ITcSysManager4)project.Object;
                     ITcSmTreeItem plcConfig = twinCatProject.LookupTreeItem("TIPC");
-                    ITcPlcProject iecProjectRoot = (ITcPlcProject)plcConfig.Child[1]; // Assume you want to run the first PLC project 
-                    iecProjectRoot.BootProjectAutostart = true;
-                    iecProjectRoot.GenerateBootProject(true);
-                    Console.WriteLine("Found PLC Project: " + project.Name + "." + plcConfig.Name);
+                    foreach (ITcSmTreeItem PLCProject in plcConfig)
+                    {
+                        // Assume you want to run the all PLCs
+                        setProjectToBoot((ITcPlcProject)PLCProject);
+                        Console.WriteLine("Found PLC Project: " + project.Name + "." + PLCProject.Name);
+                    }
                     return project;
                 } catch {
                     Console.WriteLine(project.Name + " is not a Twincat project");
