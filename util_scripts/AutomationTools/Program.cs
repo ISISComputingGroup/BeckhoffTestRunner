@@ -188,8 +188,8 @@ namespace AutomationTools
 
             if (this.options.Contains("run"))
             {
-                int runIndex = this.options.IndexOf("run");
-                if (options.Count > runIndex)
+                int runIndex = options.IndexOf("run");
+                if (options.Count > runIndex + 1)
                 {
                     runner.startPLC(options[runIndex + 1]);
                 } else
