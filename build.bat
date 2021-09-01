@@ -24,12 +24,16 @@ if %ERRORLEVEL% neq 0 goto :PROBLEM
 call msbuild.exe /p:Configuration=Release;Platform=x64 util_scripts/AutomationTools/AutomationTools.sln
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
-REM  Use the builder on the PLC solution
-
-call .\util_scripts\AutomationTools\bin\x64\Release\AutomationTools.exe "%~dp0\PLC_solution\solution.sln" clean
+call msbuild.exe /p:Configuration=Debug;Platform="Any CPU" /t:clean util_scripts/twinCATAutomationTools/tcSlnFormBuilder/tcSlnFormBuilder.sln
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
-call .\util_scripts\AutomationTools\bin\x64\Release\AutomationTools.exe "%~dp0\PLC_solution\solution.sln" build
+call msbuild.exe /p:Configuration=Debug;Platform="Any CPU" util_scripts/twinCATAutomationTools/tcSlnFormBuilder/tcSlnFormBuilder.sln
+if %ERRORLEVEL% neq 0 goto :PROBLEM
+
+REM  Use the builder on the PLC solution
+
+call .\util_scripts\twinCATAutomationTools\tcSlnFormBuilder\bin\Debug\tcSlnFormBuilder.exe VS_2017 %~dp0\PLC_solution\solution.sln "%~dp0\test_config"
+REM call .\util_scripts\twinCATAutomationTools\tcSlnFormBuilder\bin\Debug\tcSlnFormBuilder.exe VS_2017 C:\non_ibex_dev\beckhoff\collab_project\solution.sln "%~dp0\test_config"
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 GOTO :EOF
