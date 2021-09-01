@@ -72,6 +72,8 @@ class TcIocTests(unittest.TestCase):
 
         self.ca.set_pv_value(MOTOR_2_SP, 0)
 
+        self.ca.set_pv_value(MOTOR_STOP, 1)
+        self.ca.assert_that_pv_is(MOTOR_DONE, 1, timeout=10)
         self.ca.set_pv_value(MOTOR_VELO, 1)
         self.ca.set_pv_value(MOTOR_SP, 0)
         self.ca.set_pv_value(MOTOR_SP + ".UEIP", 1)
