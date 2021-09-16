@@ -14,5 +14,5 @@ Tools
 
 - Using `build.bat` will clean and build the automation tools as well as the PLC solution via TwinCAT XAE
 - Using `run.bat` will locally run the PLC solution via TwinCAT XAE
-- Jenkinsfile will allow a Jenkis pipeline to automate the building of the PLC and runing its tests
-- Tests can be locally run using `python %EPICS_KIT_ROOT%\\support\\IocTestFramework\\master\\run_tests.py -tp ".\\PLC_solution\\tests"`
+- Jenkinsfile will allow a Jenkins pipeline to automate the building of the PLC and runing its tests
+- Tests can be locally run using `python %EPICS_KIT_ROOT%\\support\\IocTestFramework\\master\\run_tests.py -tp ".\\tests"`
