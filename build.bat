@@ -3,9 +3,20 @@ setlocal
 
 if exist "C:\Program files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build" (
     set "VCVARALLDIR=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build"
+	set "MSVC_VER=VS_2017"
 )
 if exist "C:\Program files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build" (
     set "VCVARALLDIR=C:\Program files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build"
+	set "MSVC_VER=VS_2017"
+)
+
+if exist "C:\Program files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build" (
+    set "VCVARALLDIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build"
+	set "MSVC_VER=VS_2019"
+)
+if exist "C:\Program files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build" (
+    set "VCVARALLDIR=C:\Program files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build"
+	set "MSVC_VER=VS_2019"
 )
 
 REM check if msbuild is already in path
@@ -32,7 +43,7 @@ if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 REM  Use the builder on the PLC solution
 
-call .\util_scripts\twinCATAutomationTools\tcSlnFormBuilder\bin\Debug\tcSlnFormBuilder.exe VS_2017 %~dp0\PLC_solution\solution.sln "%~dp0\test_config"
+call .\util_scripts\twinCATAutomationTools\tcSlnFormBuilder\bin\Debug\tcSlnFormBuilder.exe %MSVC_VER% %~dp0\PLC_solution\solution.sln "%~dp0\test_config"
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 GOTO :EOF
