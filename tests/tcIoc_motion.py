@@ -30,7 +30,6 @@ IOCS = [
         "emulator": EMULATOR_NAME,
         "emulator_launcher_class": BeckhoffEmulatorLauncher,
         "beckhoff_root": BECKHOFF_ROOT,
-        "solution_path": os.path.join(EMULATOR_NAME, "solution.sln"),
         "custom_prefix": "MOT",
         "pv_for_existence": "MTR0101",
     },
