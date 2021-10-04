@@ -1,23 +1,7 @@
 @echo off
 setlocal
 
-if exist "C:\Program files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build" (
-    set "VCVARALLDIR=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build"
-	set "MSVC_VER=VS_2017"
-)
-if exist "C:\Program files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build" (
-    set "VCVARALLDIR=C:\Program files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build"
-	set "MSVC_VER=VS_2017"
-)
-
-if exist "C:\Program files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build" (
-    set "VCVARALLDIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build"
-	set "MSVC_VER=VS_2019"
-)
-if exist "C:\Program files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build" (
-    set "VCVARALLDIR=C:\Program files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build"
-	set "MSVC_VER=VS_2019"
-)
+call find_msc_ver.bat
 
 REM check if msbuild is already in path
 call msbuild.exe "/ver"
@@ -28,12 +12,6 @@ call "%VCVARALLDIR%\vcvarsall.bat" x64
 :STARTBUILD
 
 REM Building the Beckhoff Builder
-
-call msbuild.exe /p:Configuration=Release;Platform=x64 /t:clean util_scripts/AutomationTools/AutomationTools.sln
-if %ERRORLEVEL% neq 0 goto :PROBLEM
-
-call msbuild.exe /p:Configuration=Release;Platform=x64 util_scripts/AutomationTools/AutomationTools.sln
-if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 call msbuild.exe /p:Configuration=Debug;Platform="Any CPU" /t:clean util_scripts/twinCATAutomationTools/tcSlnFormBuilder/tcSlnFormBuilder.sln
 if %ERRORLEVEL% neq 0 goto :PROBLEM
