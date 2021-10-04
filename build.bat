@@ -43,7 +43,7 @@ if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 REM  Use the builder on the PLC solution
 
-call .\util_scripts\twinCATAutomationTools\tcSlnFormBuilder\bin\Debug\tcSlnFormBuilder.exe %MSVC_VER% %~dp0\PLC_solution\solution.sln "%~dp0\test_config"
+call .\util_scripts\twinCATAutomationTools\tcSlnFormBuilder\bin\Debug\tcSlnFormBuilder.exe build --v %MSVC_VER% -s %~dp0\PLC_solution\solution.sln -c "%~dp0\test_config"
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 GOTO :EOF
