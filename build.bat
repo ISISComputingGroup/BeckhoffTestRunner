@@ -16,7 +16,7 @@ REM Building the Beckhoff Builder
 call msbuild.exe /p:Configuration=Debug;Platform="Any CPU" /t:clean util_scripts/twinCATAutomationTools/tcSlnFormBuilder/tcSlnFormBuilder.sln
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
-call msbuild.exe /p:Configuration=Debug;Platform="Any CPU" util_scripts/twinCATAutomationTools/tcSlnFormBuilder/tcSlnFormBuilder.sln
+call msbuild.exe /p:Configuration=Debug;Platform="Any CPU";RestorePackagesConfig=true /restore util_scripts/twinCATAutomationTools/tcSlnFormBuilder/tcSlnFormBuilder.sln
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 REM  Use the builder on the PLC solution
