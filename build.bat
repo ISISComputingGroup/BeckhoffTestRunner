@@ -1,12 +1,7 @@
 @echo off
 setlocal
 
-if exist "C:\Program files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build" (
-    set "VCVARALLDIR=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build"
-)
-if exist "C:\Program files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build" (
-    set "VCVARALLDIR=C:\Program files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build"
-)
+call find_msc_ver.bat
 
 REM check if msbuild is already in path
 call msbuild.exe "/ver"
@@ -18,18 +13,15 @@ call "%VCVARALLDIR%\vcvarsall.bat" x64
 
 REM Building the Beckhoff Builder
 
-call msbuild.exe /p:Configuration=Release;Platform=x64 /t:clean util_scripts/AutomationTools/AutomationTools.sln
+call msbuild.exe /p:Configuration=Debug;Platform="Any CPU" /t:clean util_scripts/twinCATAutomationTools/tcSlnFormBuilder/tcSlnFormBuilder.sln
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
-call msbuild.exe /p:Configuration=Release;Platform=x64 util_scripts/AutomationTools/AutomationTools.sln
+call msbuild.exe /p:Configuration=Debug;Platform="Any CPU";RestorePackagesConfig=true /restore util_scripts/twinCATAutomationTools/tcSlnFormBuilder/tcSlnFormBuilder.sln
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 REM  Use the builder on the PLC solution
 
-call .\util_scripts\AutomationTools\bin\x64\Release\AutomationTools.exe "%~dp0\PLC_solution\solution.sln" clean
-if %ERRORLEVEL% neq 0 goto :PROBLEM
-
-call .\util_scripts\AutomationTools\bin\x64\Release\AutomationTools.exe "%~dp0\PLC_solution\solution.sln" build
+call .\util_scripts\twinCATAutomationTools\tcSlnFormBuilder\bin\Debug\tcSlnFormBuilder.exe build --v %MSVC_VER% -s %~dp0\PLC_solution\solution.sln -c "%~dp0\test_config"
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 GOTO :EOF

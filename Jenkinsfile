@@ -50,7 +50,7 @@ pipeline {
             call c:\\Instrument\\apps\\epics\\config_env.bat
 			set PYTHONUNBUFFERED=1
 		    @echo Starting tests
-            python %EPICS_KIT_ROOT%\\support\\IocTestFramework\\master\\run_tests.py -tp ".\\PLC_solution\\tests"
+            %PYTHON3% %EPICS_KIT_ROOT%\\support\\IocTestFramework\\master\\run_tests.py -tp ".\\tests"
 		    rmdir c:\\Instrument\\apps\\epics
             """
         }
