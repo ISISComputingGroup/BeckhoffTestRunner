@@ -26,11 +26,11 @@ IOCS = [
             "TPY_FILE": "tc_project_app.tpy",
 			"PLC_VERSION": "1",
             "MTRCTRL": "1",
+            "TWINCATCONFIG": os.path.join(BECKHOFF_ROOT, EMULATOR_NAME, "solution", "tc_project_app").replace(os.path.sep, "/")
         },
         "emulator": EMULATOR_NAME,
         "emulator_launcher_class": BeckhoffEmulatorLauncher,
         "beckhoff_root": BECKHOFF_ROOT,
-        "tpy_file_path": os.path.join(BECKHOFF_ROOT, EMULATOR_NAME, "solution", "tc_project_app", "tc_project_app.tpy"),
         "custom_prefix": "MOT",
         "pv_for_existence": "MTR0101",
     },
