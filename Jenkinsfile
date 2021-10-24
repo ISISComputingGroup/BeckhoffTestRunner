@@ -51,7 +51,7 @@ pipeline {
 	// Not ideal as newbuildtest may have failed to built
     stage("Test") {
       steps {
-	   lock(resource: ELOCK, inversePrecedence: true) {
+	   lock(resource: ELOCK, inversePrecedence: false) {
         timeout(time: 16, unit: 'HOURS') {
          bat """
 		    setlocal
