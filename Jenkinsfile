@@ -58,7 +58,7 @@ pipeline {
 		    setlocal
 		    @echo Temporarily enabling EPICS_IOC_Windows10_x64_CLEAN build as system EPICS installation
 		    if exist "c:\\Instrument\\apps\\epics" rmdir c:\\Instrument\\apps\\epics
-			mklink /j c:\\Instrument\\apps\\epics C:\Jenkins\workspace\EPICS_IOC_Windows10_x64_CLEAN
+			mklink /j c:\\Instrument\\apps\\epics C:\\Jenkins\\workspace\\EPICS_IOC_Windows10_x64_CLEAN
             call c:\\Instrument\\apps\\epics\\config_env.bat
 			set PYTHONUNBUFFERED=1
 		    @echo Starting tests
