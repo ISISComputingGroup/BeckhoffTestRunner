@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<VarLinks>
+  <OwnerA Name="TIPC^tc_project_app^tc_project_app Instance">
+    <OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 1">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[1].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[1].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
+    <OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 2">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[2].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[2].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
+  </OwnerA>
+</VarLinks>

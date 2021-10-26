@@ -25,18 +25,6 @@ pipeline {
         checkout scm
       }
     }
-    
-// at moment use python in EPICS build area
-//	stage("Dependencies") {
-//        steps {
-//          echo "Installing local genie python"
-//          timeout(time: 1, unit: 'HOURS') {
-//            bat """
-//                update_genie_python.bat ${env.WORKSPACE}\\Python
-//            """
-//          }
-//        }
-//    }
 
     stage("Build") {
       steps {
@@ -47,7 +35,6 @@ pipeline {
             """
         }
     }
-
     // We need an EPICS installation, so temporarily link to the local one
     // Not ideal as it may have failed to built
     stage("Test") {
@@ -62,7 +49,7 @@ pipeline {
             call c:\\Instrument\\apps\\epics\\config_env.bat
 			set PYTHONUNBUFFERED=1
 		    @echo Starting tests
-            python -u %EPICS_KIT_ROOT%\\support\\IocTestFramework\\master\\run_tests.py -tp ".\\PLC_solution\\tests"
+            %PYTHON3% %EPICS_KIT_ROOT%\\support\\IocTestFramework\\master\\run_tests.py -tp ".\\tests"
 		    rmdir c:\\Instrument\\apps\\epics
             """
         }
@@ -74,6 +61,12 @@ pipeline {
   post {
     always {
       junit "test-reports/**/*.xml"
+    }	
+    failure {
+      step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'icp-buildserver@lists.isis.rl.ac.uk', sendToIndividuals: true])
+    }
+    changed {
+      step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: 'icp-buildserver@lists.isis.rl.ac.uk', sendToIndividuals: true])
     }
   }
   

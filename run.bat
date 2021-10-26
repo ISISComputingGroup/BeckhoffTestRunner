@@ -1,28 +1,12 @@
 @echo off
 setlocal
 
-if exist "C:\Program files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build" (
-    set "VCVARALLDIR=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build"
-)
-if exist "C:\Program files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build" (
-    set "VCVARALLDIR=C:\Program files (x86)\Microsoft Visual Studio\2019\Professional\VC\Auxiliary\Build"
-)
-
-REM check if msbuild is already in path
-call msbuild.exe "/ver"
-if %ERRORLEVEL% equ 0 goto :STARTBUILD
-
-call "%VCVARALLDIR%\vcvarsall.bat" x64
-
-:STARTBUILD
-
-REM Building the Beckhoff Builder
-call msbuild.exe /p:Configuration=Release;Platform=x64 util_scripts/AutomationTools/AutomationTools.sln
+call find_msc_ver.bat
 
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 
 REM Start the PLC
-call .\util_scripts\AutomationTools\bin\x64\Release\AutomationTools.exe "%~dp0\PLC_solution\solution.sln" run
+call .\util_scripts\twinCATAutomationTools\tcSlnFormBuilder\bin\Debug\tcSlnFormBuilder.exe run -s "%~dp0\PLC_solution\solution.sln" -v %MSVC_VER%
 
 if %ERRORLEVEL% neq 0 goto :PROBLEM
 

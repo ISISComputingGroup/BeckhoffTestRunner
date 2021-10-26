@@ -1,0 +1,13 @@
+tc_project_app^tc_project_app Project^GVLs^GVL_APP
+replace
+
+
+
+{attribute 'qualified_only'}
+VAR_GLOBAL
+
+END_VAR
+
+VAR_GLOBAL CONSTANT
+    nAXIS_NUM : UINT:=2;
+END_VAR

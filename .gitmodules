@@ -1,0 +1,6 @@
+[submodule "PLC_solution"]
+	path = PLC_solution
+	url = https://bitbucket.org/europeanspallationsource/tc_generic_structure.git
+[submodule "util_scripts/twinCATAutomationTools"]
+	path = util_scripts/twinCATAutomationTools
+	url = https://github.com/Simon-Cooper/twinCATAutomationTools.git
