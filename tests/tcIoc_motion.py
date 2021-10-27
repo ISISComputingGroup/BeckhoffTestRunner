@@ -51,6 +51,7 @@ MOTOR_STOP = MOTOR_SP + ".STOP"
 MOTOR_JOGF = MOTOR_SP + ".JOGF"
 MOTOR_JOGR = MOTOR_SP + ".JOGR"
 MOTOR_VELO = MOTOR_SP + ".VELO"
+MOTOR_RTRY = MOTOR_SP + ".RTRY"
 
 MOTOR_2_SP = MOTOR_SP_BASE.format(2)
 MOTOR_2_RBV = MOTOR_RBV_BASE.format(2)
@@ -141,4 +142,7 @@ class TcIocTests(unittest.TestCase):
         self.ca.set_pv_value(MOTOR_SP, target)
         self.check_moving(True)
         self.ca.assert_that_pv_is(MOTOR_RBV, target, timeout=20)
+    
+    def test_WHEN_axis_set_up_THEN_retries_are_not_allowed(self):
+        self.ca.assert_that_pv_is(MOTOR_RTRY, 0)
 
