@@ -23,9 +23,10 @@ IOCS = [
         "name": DEVICE_PREFIX,
         "directory": get_default_ioc_dir("TWINCAT"),
         "macros": {
-            "TPY_FILE": "{}".format(os.path.join(BECKHOFF_ROOT, EMULATOR_NAME, "solution", "tc_project_app", "tc_project_app.tpy").replace(os.path.sep, "/")),
+            "TPY_FILE": "tc_project_app.tpy",
 			"PLC_VERSION": "1",
             "MTRCTRL": "1",
+            "TWINCATCONFIG": os.path.join(BECKHOFF_ROOT, EMULATOR_NAME, "solution", "tc_project_app").replace(os.path.sep, "/")
         },
         "emulator": EMULATOR_NAME,
         "emulator_launcher_class": BeckhoffEmulatorLauncher,
