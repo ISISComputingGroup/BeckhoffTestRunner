@@ -9,5 +9,33 @@
       <Link VarA="PlcTask Inputs^GVL.astAxes[2].Axis.NcToPlc" VarB="Outputs^ToPlc" />
       <Link VarA="PlcTask Outputs^GVL.astAxes[2].Axis.PlcToNc" VarB="Inputs^FromPlc" />
     </OwnerB>
+	<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 3">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[3].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[3].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
+	<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 4">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[4].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[4].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
+	<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 5">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[5].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[5].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
+	<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 6">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[6].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[6].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
+	<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 7">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[7].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[7].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
+	<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 8">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[8].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[8].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
+	<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Axis 9">
+      <Link VarA="PlcTask Inputs^GVL.astAxes[9].Axis.NcToPlc" VarB="Outputs^ToPlc" />
+      <Link VarA="PlcTask Outputs^GVL.astAxes[9].Axis.PlcToNc" VarB="Inputs^FromPlc" />
+    </OwnerB>
   </OwnerA>
 </VarLinks>

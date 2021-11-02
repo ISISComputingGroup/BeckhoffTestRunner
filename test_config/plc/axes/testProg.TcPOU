@@ -16,6 +16,27 @@ IF _TaskInfo[fbGetCurTaskIndex.index].FirstCycle THEN
     GVL.astAxes[2].stInputs.bLimitBwd := 1;
     GVL.astAxes[2].stInputs.bLimitFwd := 1;
     GVL.astAxes[2].stControl.bEnable := 1;
+    GVL.astAxes[3].stInputs.bLimitBwd := 1;
+    GVL.astAxes[3].stInputs.bLimitFwd := 1;
+    GVL.astAxes[3].stControl.bEnable := 1;
+    GVL.astAxes[4].stInputs.bLimitBwd := 1;
+    GVL.astAxes[4].stInputs.bLimitFwd := 1;
+    GVL.astAxes[4].stControl.bEnable := 1;
+    GVL.astAxes[5].stInputs.bLimitBwd := 1;
+    GVL.astAxes[5].stInputs.bLimitFwd := 1;
+    GVL.astAxes[5].stControl.bEnable := 1;
+    GVL.astAxes[6].stInputs.bLimitBwd := 1;
+    GVL.astAxes[6].stInputs.bLimitFwd := 1;
+    GVL.astAxes[6].stControl.bEnable := 1;
+    GVL.astAxes[7].stInputs.bLimitBwd := 1;
+    GVL.astAxes[7].stInputs.bLimitFwd := 1;
+    GVL.astAxes[7].stControl.bEnable := 1;
+    GVL.astAxes[8].stInputs.bLimitBwd := 1;
+    GVL.astAxes[8].stInputs.bLimitFwd := 1;
+    GVL.astAxes[8].stControl.bEnable := 1;
+    GVL.astAxes[9].stInputs.bLimitBwd := 1;
+    GVL.astAxes[9].stInputs.bLimitFwd := 1;
+    GVL.astAxes[9].stControl.bEnable := 1;
 END_IF
 ]]></ST>
     </Implementation>
