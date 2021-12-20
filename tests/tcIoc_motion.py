@@ -41,10 +41,13 @@ TEST_MODES = [TestModes.DEVSIM]
 
 MOTOR_SP_BASE = "MOT:MTR010{}"
 MOTOR_RBV_BASE = MOTOR_SP_BASE + ".RBV"
+MOTOR_MOVING_BASE = MOTOR_SP_BASE + ".MOVN"
+MOTOR_DONE_BASE = MOTOR_SP_BASE + ".DMOV"
+MOTOR_STOP_BASE = MOTOR_SP_BASE + ".STOP"
+MOTOR_VELO_BASE = MOTOR_SP_BASE + ".VELO"
 
 MOTOR_SP = MOTOR_SP_BASE.format(1)
 MOTOR_RBV = MOTOR_RBV_BASE.format(1)
-MOTOR_MOVING = MOTOR_SP + ".MOVN"
 MOTOR_DONE = MOTOR_SP + ".DMOV"
 MOTOR_DIR = MOTOR_SP + ".TDIR"
 MOTOR_STOP = MOTOR_SP + ".STOP"
@@ -58,6 +61,7 @@ MOTOR_2_RBV = MOTOR_RBV_BASE.format(2)
 LIMIT_FWD = "ASTAXES_{}:STINPUTS-BLIMITFWD"
 LIMIT_BWD = "ASTAXES_{}:STINPUTS-BLIMITBWD"
 
+
 class TcIocTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -66,22 +70,20 @@ class TcIocTests(unittest.TestCase):
         cls.ca = ChannelAccess(device_prefix=None)
 
     def setUp(self):
-        for i in range(1, 3):
+        for i in range(1, 9):
             self.ca.set_pv_value(LIMIT_FWD.format(i), 1)
             self.ca.set_pv_value(LIMIT_BWD.format(i), 1)
+            self.ca.set_pv_value(MOTOR_SP_BASE.format(i), 0)
+            self.ca.set_pv_value(MOTOR_STOP_BASE.format(i), 1)
+            self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(i), 1, timeout=10)
+            self.ca.set_pv_value(MOTOR_VELO_BASE.format(i), 1)
+            self.ca.set_pv_value(MOTOR_SP_BASE.format(i), 0)
+            self.ca.set_pv_value(MOTOR_SP_BASE.format(i) + ".UEIP", 1)
+            self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(i), 1, timeout=10)
 
-        self.ca.set_pv_value(MOTOR_2_SP, 0)
-
-        self.ca.set_pv_value(MOTOR_STOP, 1)
-        self.ca.assert_that_pv_is(MOTOR_DONE, 1, timeout=10)
-        self.ca.set_pv_value(MOTOR_VELO, 1)
-        self.ca.set_pv_value(MOTOR_SP, 0)
-        self.ca.set_pv_value(MOTOR_SP + ".UEIP", 1)
-        self.ca.assert_that_pv_is(MOTOR_DONE, 1, timeout=10)
-
-    def check_moving(self, expected_moving):
-        self.ca.assert_that_pv_is(MOTOR_MOVING, int(expected_moving), timeout=1)
-        self.ca.assert_that_pv_is(MOTOR_DONE, int(not expected_moving), timeout=1)
+    def check_moving(self, expected_moving, axis_num=1):
+        self.ca.assert_that_pv_is(MOTOR_MOVING_BASE.format(axis_num), int(expected_moving), timeout=1)
+        self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(axis_num), int(not expected_moving), timeout=1)
 
     @parameterized.expand(
         parameterized_list([3.5, 6, -10])
@@ -122,7 +124,7 @@ class TcIocTests(unittest.TestCase):
     )
     def test_WHEN_motor_2_moved_THEN_motor_2_gets_to_position_and_motor_1_not_moved(self, _, target):
         self.ca.set_pv_value(MOTOR_2_SP, target)
-        self.ca.assert_that_pv_is(MOTOR_MOVING, 0)
+        self.ca.assert_that_pv_is(MOTOR_MOVING_BASE.format(1), 0)
         self.ca.assert_that_pv_is_number(MOTOR_RBV, 0)
         self.ca.assert_that_pv_is(MOTOR_2_RBV, target, timeout=20)
 
@@ -142,3 +144,14 @@ class TcIocTests(unittest.TestCase):
         self.check_moving(True)
         self.ca.assert_that_pv_is(MOTOR_RBV, target, timeout=20)
 
+    @parameterized.expand(
+        parameterized_list([3.5, 6, -10])
+    )
+    def test_WHEN_axis_9_changed_THEN_original_and_aliased_motor_record_updates(self, _, target):
+        self.check_moving(False, 9)
+        self.ca.set_pv_value(MOTOR_SP_BASE.format(9), target)
+        self.ca.assert_that_pv_is("MOT:MTR0201", target)
+        self.check_moving(True, 9)
+        self.ca.assert_that_pv_is(MOTOR_RBV_BASE.format(9), target, timeout=20)
+        self.ca.assert_that_pv_is("MOT:MTR0201.RBV", target, timeout=20)
+        self.check_moving(False, 9)
