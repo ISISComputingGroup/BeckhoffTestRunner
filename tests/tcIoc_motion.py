@@ -41,6 +41,8 @@ TEST_MODES = [TestModes.DEVSIM]
 
 MOTOR_SP_BASE = "MOT:MTR010{}"
 MOTOR_RBV_BASE = MOTOR_SP_BASE + ".RBV"
+MOTOR_ABLE_BASE = MOTOR_SP_BASE + "_able"
+
 
 MOTOR_SP = MOTOR_SP_BASE.format(1)
 MOTOR_RBV = MOTOR_RBV_BASE.format(1)
@@ -58,6 +60,7 @@ MOTOR_2_RBV = MOTOR_RBV_BASE.format(2)
 
 LIMIT_FWD = "ASTAXES_{}:STINPUTS-BLIMITFWD"
 LIMIT_BWD = "ASTAXES_{}:STINPUTS-BLIMITBWD"
+ENABLE = "ASTAXES_{}:STCONTROL-BENABLE"
 
 class TcIocTests(unittest.TestCase):
     @classmethod
@@ -146,3 +149,9 @@ class TcIocTests(unittest.TestCase):
     def test_WHEN_axis_set_up_THEN_retries_are_not_allowed(self):
         self.ca.assert_that_pv_is(MOTOR_RTRY, 0)
 
+    def test_WHEN_enabled_set_on_plc_THEN_motor_able_is_set_correctly(self):
+        axis_num = 1
+        self.ca.set_pv_value(ENABLE.format(axis_num), 0)
+        self.ca.assert_that_pv_is(MOTOR_ABLE_BASE.format(axis_num), 'Disable') # values are flipped vs PLC, so _able == 1 is PLC disabled etc
+        self.ca.set_pv_value(ENABLE.format(axis_num), 1)
+        self.ca.assert_that_pv_is(MOTOR_ABLE_BASE.format(axis_num), 'Enable')
