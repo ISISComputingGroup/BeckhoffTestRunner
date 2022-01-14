@@ -13,7 +13,7 @@ from utils.testing import skip_if_recsim, get_running_lewis_and_ioc, parameteriz
 from time import sleep
 
 # Device prefix
-DEVICE_PREFIX = "TWINCAT_01"
+DEVICE_PREFIX = "TC_01"
 EMULATOR_NAME = "PLC_solution"
 
 BECKHOFF_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
@@ -21,7 +21,7 @@ BECKHOFF_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 IOCS = [
     {
         "name": DEVICE_PREFIX,
-        "directory": get_default_ioc_dir("TWINCAT"),
+        "directory": get_default_ioc_dir("TC"),
         "macros": {
             "TPY_FILE": "tc_project_app.tpy",
 			"PLC_VERSION": "1",
@@ -60,9 +60,9 @@ MOTOR_RTRY = MOTOR_SP + ".RTRY"
 MOTOR_2_SP = MOTOR_SP_BASE.format(2)
 MOTOR_2_RBV = MOTOR_RBV_BASE.format(2)
 
-LIMIT_FWD = "ASTAXES_{}:STINPUTS-BLIMITFWD"
-LIMIT_BWD = "ASTAXES_{}:STINPUTS-BLIMITBWD"
-ENABLE = "ASTAXES_{}:STCONTROL-BENABLE"
+ENABLE = DEVICE_PREFIX + ":ASTAXES_{}:STCONTROL-BENABLE"
+LIMIT_FWD = DEVICE_PREFIX + ":ASTAXES_{}:STINPUTS-BLIMITFWD"
+LIMIT_BWD = DEVICE_PREFIX + ":ASTAXES_{}:STINPUTS-BLIMITBWD"
 
 
 class TcIocTests(unittest.TestCase):
