@@ -30,6 +30,7 @@ pipeline {
       steps {
         bat """
 	    setlocal
+	    git clean -fdX PLC_solution/
             git submodule update --init --recursive --remote
             build.bat
             """
