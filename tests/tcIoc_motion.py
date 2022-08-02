@@ -73,7 +73,7 @@ class TcIocTests(unittest.TestCase):
         cls.ca = ChannelAccess(device_prefix=None)
 
     def setUp(self):
-        for i in range(1, 9):
+        for i in range(1, 10):
             self.ca.set_pv_value(LIMIT_FWD.format(i), 1)
             self.ca.set_pv_value(LIMIT_BWD.format(i), 1)
             self.ca.set_pv_value(MOTOR_SP_BASE.format(i), 0)
@@ -81,7 +81,6 @@ class TcIocTests(unittest.TestCase):
             self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(i), 1, timeout=10)
             self.ca.set_pv_value(MOTOR_VELO_BASE.format(i), 1)
             self.ca.set_pv_value(MOTOR_SP_BASE.format(i), 0)
-            self.ca.set_pv_value(MOTOR_SP_BASE.format(i) + ".UEIP", 1)
             self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(i), 1, timeout=10)
 
     def check_moving(self, expected_moving, axis_num=1):
@@ -137,15 +136,6 @@ class TcIocTests(unittest.TestCase):
     def test_WHEN_limits_hit_THEN_motor_reports_limits(self, _, motor_pv_suffix, pv_to_set):
         self.ca.set_pv_value(pv_to_set, 0)
         self.ca.assert_that_pv_is(MOTOR_SP + motor_pv_suffix, 1)
-
-    @parameterized.expand(
-        parameterized_list([3.5, 6, -10])
-    )
-    def test_WHEN_not_using_encoder_THEN_move_reaches_set_point(self, _, target):
-        self.ca.set_pv_value(MOTOR_SP + ".UEIP", 0)
-        self.ca.set_pv_value(MOTOR_SP, target)
-        self.check_moving(True)
-        self.ca.assert_that_pv_is(MOTOR_RBV, target, timeout=20)
     
     def test_WHEN_axis_set_up_THEN_retries_are_not_allowed(self):
         self.ca.assert_that_pv_is(MOTOR_RTRY, 0)
