@@ -31,7 +31,10 @@ pipeline {
         bat """
 	    setlocal
 	    git clean -fdX PLC_solution/
-	    git stash PLC_solution/
+	    cd PLC_solution
+	    git add -A 
+	    git stash
+	    cd ..
             git submodule update --init --recursive --remote --force
             build.bat
             """
