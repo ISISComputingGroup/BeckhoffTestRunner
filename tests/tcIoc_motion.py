@@ -41,7 +41,9 @@ TEST_MODES = [TestModes.DEVSIM]
 
 MOTOR_SP_BASE = "MOT:MTR010{}"
 MOTOR_RBV_BASE = MOTOR_SP_BASE + ".RBV"
-MOTOR_ABLE_BASE = MOTOR_SP_BASE + "_able"
+MOTOR_ON_STATUS = MOTOR_SP_BASE + "_ON_STATUS"
+MOTOR_ON_CMD = MOTOR_SP_BASE + "_ON_CMD"
+
 MOTOR_MOVING_BASE = MOTOR_SP_BASE + ".MOVN"
 MOTOR_DONE_BASE = MOTOR_SP_BASE + ".DMOV"
 MOTOR_STOP_BASE = MOTOR_SP_BASE + ".STOP"
@@ -61,6 +63,7 @@ MOTOR_2_SP = MOTOR_SP_BASE.format(2)
 MOTOR_2_RBV = MOTOR_RBV_BASE.format(2)
 
 ENABLE = DEVICE_PREFIX + ":ASTAXES_{}:STCONTROL-BENABLE"
+ENABLED = DEVICE_PREFIX + ":ASTAXES_{}:STSTATUS-BENABLED.RVAL"
 LIMIT_FWD = DEVICE_PREFIX + ":ASTAXES_{}:STINPUTS-BLIMITFWD"
 LIMIT_BWD = DEVICE_PREFIX + ":ASTAXES_{}:STINPUTS-BLIMITBWD"
 
@@ -73,17 +76,18 @@ class TcIocTests(unittest.TestCase):
         cls.ca = ChannelAccess(device_prefix=None)
 
     def setUp(self):
-        for i in range(1, 10):
+        # Only setup for axes 1,2 and 9 - they are the only ones tested and therefore need to be set.
+        for i in [1, 2, 9]:
+            self.ca.set_pv_value(ENABLED.format(i), 1)
             self.ca.set_pv_value(LIMIT_FWD.format(i), 1)
             self.ca.set_pv_value(LIMIT_BWD.format(i), 1)
-            self.ca.set_pv_value(MOTOR_SP_BASE.format(i), 0)
             self.ca.set_pv_value(MOTOR_STOP_BASE.format(i), 1)
-            self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(i), 1, timeout=10)
             self.ca.set_pv_value(MOTOR_VELO_BASE.format(i), 1)
             self.ca.set_pv_value(MOTOR_SP_BASE.format(i), 0)
             self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(i), 1, timeout=10)
 
     def check_moving(self, expected_moving, axis_num=1):
+        sleep(0.1)  # Moving has a slight delay so allow for 100ms to update
         self.ca.assert_that_pv_is(MOTOR_MOVING_BASE.format(axis_num), int(expected_moving), timeout=1)
         self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(axis_num), int(not expected_moving), timeout=1)
 
@@ -140,12 +144,23 @@ class TcIocTests(unittest.TestCase):
     def test_WHEN_axis_set_up_THEN_retries_are_not_allowed(self):
         self.ca.assert_that_pv_is(MOTOR_RTRY, 0)
 
-    def test_WHEN_enabled_set_on_plc_THEN_motor_able_is_set_correctly(self):
+    def test_WHEN_enabled_set_on_plc_THEN_motor_status_on_is_set_correctly(self):
         axis_num = 1
         self.ca.set_pv_value(ENABLE.format(axis_num), 0)
-        self.ca.assert_that_pv_is(MOTOR_ABLE_BASE.format(axis_num), 'Disable') # values are flipped vs PLC, so _able == 1 is PLC disabled etc
+        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), 0)
+
         self.ca.set_pv_value(ENABLE.format(axis_num), 1)
-        self.ca.assert_that_pv_is(MOTOR_ABLE_BASE.format(axis_num), 'Enable')
+        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), 1)
+
+    def test_WHEN_enabled_set_via_mtr_rec_THEN_PLC_is_updated(self):
+        axis_num = 1
+        self.ca.set_pv_value(MOTOR_ON_CMD.format(axis_num), 0)
+        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), 0)
+        self.ca.assert_that_pv_is(ENABLED.format(axis_num), 0)
+
+        self.ca.set_pv_value(MOTOR_ON_CMD.format(axis_num), 1)
+        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), 1)
+        self.ca.assert_that_pv_is(ENABLED.format(axis_num), 1)
 
         
     @parameterized.expand(
