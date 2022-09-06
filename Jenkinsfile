@@ -19,6 +19,17 @@ pipeline {
   }
 
   stages {  
+    stage("Clean") {
+        steps {
+            bat """
+	    setlocal
+	    git clean -fdX PLC_solution/
+	    cd PLC_solution
+	    git add -A 
+	    git stash
+            """
+            }
+	  }
     stage("Checkout") {
       steps {
         echo "Branch: ${env.BRANCH_NAME}"
@@ -30,11 +41,6 @@ pipeline {
       steps {
         bat """
 	    setlocal
-	    git clean -fdX PLC_solution/
-	    cd PLC_solution
-	    git add -A 
-	    git stash
-	    cd ..
             git submodule update --init --recursive --remote --force
             build.bat
             """
