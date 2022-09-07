@@ -144,23 +144,29 @@ class TcIocTests(unittest.TestCase):
     def test_WHEN_axis_set_up_THEN_retries_are_not_allowed(self):
         self.ca.assert_that_pv_is(MOTOR_RTRY, 0)
 
-    def test_WHEN_enabled_set_on_plc_THEN_motor_status_on_is_set_correctly(self):
+    @parameterized.expand(
+        parameterized_list([1, 0])
+    )
+    def test_WHEN_enabled_set_on_plc_THEN_motor_status_on_is_set_correctly(self, _, desired_state):
         axis_num = 1
-        self.ca.set_pv_value(ENABLE.format(axis_num), 0)
-        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), 0)
+        self.ca.set_pv_value(ENABLE.format(axis_num), not desired_state)
+        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), not desired_state)
 
-        self.ca.set_pv_value(ENABLE.format(axis_num), 1)
-        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), 1)
-
-    def test_WHEN_enabled_set_via_mtr_rec_THEN_PLC_is_updated(self):
+        self.ca.set_pv_value(ENABLE.format(axis_num), desired_state)
+        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), desired_state)
+    
+    @parameterized.expand(
+        parameterized_list([1, 0])
+    )
+    def test_WHEN_enabled_set_via_mtr_rec_THEN_PLC_is_updated(self, _, desired_state):
         axis_num = 1
-        self.ca.set_pv_value(MOTOR_ON_CMD.format(axis_num), 0)
-        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), 0)
-        self.ca.assert_that_pv_is(ENABLED.format(axis_num), 0)
+        self.ca.set_pv_value(MOTOR_ON_CMD.format(axis_num), not desired_state)
+        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), not desired_state)
+        self.ca.assert_that_pv_is(ENABLED.format(axis_num), not desired_state)
 
-        self.ca.set_pv_value(MOTOR_ON_CMD.format(axis_num), 1)
-        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), 1)
-        self.ca.assert_that_pv_is(ENABLED.format(axis_num), 1)
+        self.ca.set_pv_value(MOTOR_ON_CMD.format(axis_num), desired_state)
+        self.ca.assert_that_pv_is(MOTOR_ON_STATUS.format(axis_num), desired_state)
+        self.ca.assert_that_pv_is(ENABLED.format(axis_num), desired_state)
 
         
     @parameterized.expand(
