@@ -34,6 +34,9 @@ pipeline {
       steps {
         echo "Branch: ${env.BRANCH_NAME}"
         checkout scm
+	bat """
+	git submodule update --init --recursive 
+	"""
       }
     }
 
@@ -41,7 +44,6 @@ pipeline {
       steps {
         bat """
 	    setlocal
-            git submodule update --init --recursive --remote --force
             build.bat
             """
         }
