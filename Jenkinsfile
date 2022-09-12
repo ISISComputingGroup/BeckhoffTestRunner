@@ -27,6 +27,8 @@ pipeline {
 	    cd PLC_solution
 	    git add -A 
 	    git stash
+	    git reset --hard HEAD 
+	    cd .. 
             """
             }
 	  }
