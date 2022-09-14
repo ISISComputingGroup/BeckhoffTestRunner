@@ -19,28 +19,7 @@ pipeline {
   }
 
   stages {  
-    stage("Clean") {
-        steps {
-            bat """
-	    setlocal
-	    git clean -fdX PLC_solution/
-	    cd PLC_solution
-	    git add -A 
-	    git stash
-	    git reset --hard HEAD 
-	    cd .. 
-            """
-            }
-	  }
-    stage("Checkout") {
-      steps {
-        echo "Branch: ${env.BRANCH_NAME}"
-        checkout scm
-	bat """
-	git submodule update --init --recursive 
-	"""
-      }
-    }
+   // Checkout done automagically, with submodule recursive update
 
     stage("Build") {
       steps {
