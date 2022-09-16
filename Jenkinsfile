@@ -24,7 +24,6 @@ pipeline {
     stage("Build") {
       steps {
         bat """
-	    setlocal
             build.bat
             """
         }
