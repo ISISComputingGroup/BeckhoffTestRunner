@@ -1,6 +1,9 @@
 @echo off
 setlocal
 
+REM remove INSTRUMENT env var here as it conflicts with the tcSlnFormBuilder. As we have a setlocal above this is not a permanent change and INSTRUMENT will remain the same afterwards.
+set INSTRUMENT=
+
 call find_msc_ver.bat
 
 REM check if msbuild is already in path
