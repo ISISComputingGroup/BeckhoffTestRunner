@@ -66,7 +66,7 @@ ENABLE = DEVICE_PREFIX + ":ASTAXES_{}:STCONTROL-BENABLE"
 ENABLED = DEVICE_PREFIX + ":ASTAXES_{}:STSTATUS-BENABLED.RVAL"
 LIMIT_FWD = DEVICE_PREFIX + ":ASTAXES_{}:STINPUTS-BLIMITFWD"
 LIMIT_BWD = DEVICE_PREFIX + ":ASTAXES_{}:STINPUTS-BLIMITBWD"
-
+RESET = DEVICE_PREFIX + ":ASTAXES_{}:STCONTROL-BRESET"
 
 class TcIocTests(unittest.TestCase):
     @classmethod
@@ -78,7 +78,8 @@ class TcIocTests(unittest.TestCase):
     def setUp(self):
         # Only setup for axes 1,2 and 9 - they are the only ones tested and therefore need to be set.
         for i in [1, 2, 9]:
-            self.ca.set_pv_value(ENABLED.format(i), 1)
+            self.ca.set_pv_value(RESET.format(i), 1)
+            self.ca.set_pv_value(ENABLE.format(i), 1)
             self.ca.set_pv_value(LIMIT_FWD.format(i), 1)
             self.ca.set_pv_value(LIMIT_BWD.format(i), 1)
             self.ca.set_pv_value(MOTOR_STOP_BASE.format(i), 1)
@@ -87,7 +88,7 @@ class TcIocTests(unittest.TestCase):
             self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(i), 1, timeout=10)
 
     def check_moving(self, expected_moving, axis_num=1):
-        sleep(0.1)  # Moving has a slight delay so allow for 100ms to update
+        sleep(0.2)  # Moving has a slight delay so allow for 200ms to update
         self.ca.assert_that_pv_is(MOTOR_MOVING_BASE.format(axis_num), int(expected_moving), timeout=1)
         self.ca.assert_that_pv_is(MOTOR_DONE_BASE.format(axis_num), int(not expected_moving), timeout=1)
 
@@ -95,11 +96,9 @@ class TcIocTests(unittest.TestCase):
         parameterized_list([3.5, 6, -10])
     )
     def test_WHEN_moving_to_position_THEN_status_is_moving_and_gets_to_position(self, _, target):
-        self.check_moving(False)
         self.ca.set_pv_value(MOTOR_SP, target)
         self.check_moving(True)
         self.ca.assert_that_pv_is(MOTOR_RBV, target, timeout=20)
-        self.check_moving(False)
 
     def test_WHEN_moving_forward_THEN_motor_record_in_positive_direction(self):
         self.ca.set_pv_value(MOTOR_SP, 2)
@@ -111,6 +110,7 @@ class TcIocTests(unittest.TestCase):
 
     def test_WHEN_moving_THEN_can_stop_motion(self):
         self.ca.set_pv_value(MOTOR_SP, 100)
+        self.check_moving(True)
         self.ca.set_pv_value(MOTOR_STOP, 1)
         self.check_moving(False)
         self.ca.assert_that_pv_is_not_number(MOTOR_RBV, 100, 10)
@@ -170,13 +170,8 @@ class TcIocTests(unittest.TestCase):
 
         
     @parameterized.expand(
-        parameterized_list([3.5, 6, -10])
+        parameterized_list([0.5, -0.5])
     )
     def test_WHEN_axis_9_changed_THEN_original_and_aliased_motor_record_updates(self, _, target):
-        self.check_moving(False, 9)
         self.ca.set_pv_value(MOTOR_SP_BASE.format(9), target)
-        self.ca.assert_that_pv_is("MOT:MTR0201", target)
-        self.check_moving(True, 9)
-        self.ca.assert_that_pv_is(MOTOR_RBV_BASE.format(9), target, timeout=20)
-        self.ca.assert_that_pv_is("MOT:MTR0201.RBV", target, timeout=20)
-        self.check_moving(False, 9)
+        self.ca.assert_that_pv_is("MOT:MTR0201:SP", target)
