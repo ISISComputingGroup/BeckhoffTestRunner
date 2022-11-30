@@ -73,11 +73,11 @@ class TcIocTests(unittest.TestCase):
     def setUpClass(cls):
         cls.emulator, cls._ioc = get_running_lewis_and_ioc(EMULATOR_NAME, DEVICE_PREFIX)
 
-        cls.ca = ChannelAccess(device_prefix=None)
+        cls.ca = ChannelAccess(device_prefix=None, default_wait_time=0.0)
 
     def setUp(self):
-        # Only setup for axes 1,2 and 9 - they are the only ones tested and therefore need to be set.
-        for i in [1, 2, 9]:
+        # Only setup for axes 1 and 9 - they are the only ones tested and therefore need to be set.
+        for i in [1, 9]:
             self.ca.set_pv_value(RESET.format(i), 1)
             self.ca.set_pv_value(ENABLE.format(i), 1)
             self.ca.set_pv_value(LIMIT_FWD.format(i), 1)
@@ -126,15 +126,6 @@ class TcIocTests(unittest.TestCase):
         self.check_moving(False)
 
     @parameterized.expand(
-        parameterized_list([3.5, 6, -10])
-    )
-    def test_WHEN_motor_2_moved_THEN_motor_2_gets_to_position_and_motor_1_not_moved(self, _, target):
-        self.ca.set_pv_value(MOTOR_2_SP, target)
-        self.ca.assert_that_pv_is(MOTOR_MOVING_BASE.format(1), 0)
-        self.ca.assert_that_pv_is_number(MOTOR_RBV, 0)
-        self.ca.assert_that_pv_is(MOTOR_2_RBV, target, timeout=20)
-
-    @parameterized.expand(
         parameterized_list([(".HLS", LIMIT_FWD.format(1)), (".LLS", LIMIT_BWD.format(1))])
     )
     def test_WHEN_limits_hit_THEN_motor_reports_limits(self, _, motor_pv_suffix, pv_to_set):
@@ -175,3 +166,5 @@ class TcIocTests(unittest.TestCase):
     def test_WHEN_axis_9_changed_THEN_original_and_aliased_motor_record_updates(self, _, target):
         self.ca.set_pv_value(MOTOR_SP_BASE.format(9), target)
         self.ca.assert_that_pv_is("MOT:MTR0201:SP", target)
+        # make sure motor 1 has not moved
+        self.ca.assert_that_pv_is_number(MOTOR_RBV, 0)
