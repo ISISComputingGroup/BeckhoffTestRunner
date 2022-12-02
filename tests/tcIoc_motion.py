@@ -48,6 +48,7 @@ MOTOR_MOVING_BASE = MOTOR_SP_BASE + ".MOVN"
 MOTOR_DONE_BASE = MOTOR_SP_BASE + ".DMOV"
 MOTOR_STOP_BASE = MOTOR_SP_BASE + ".STOP"
 MOTOR_VELO_BASE = MOTOR_SP_BASE + ".VELO"
+MOTOR_DIR_BASE = MOTOR_SP_BASE + ".DIR"
 
 MOTOR_SP = MOTOR_SP_BASE.format(1)
 MOTOR_RBV = MOTOR_RBV_BASE.format(1)
@@ -80,6 +81,7 @@ class TcIocTests(unittest.TestCase):
         for i in [1, 9]:
             self.ca.set_pv_value(RESET.format(i), 1)
             self.ca.set_pv_value(ENABLE.format(i), 1)
+            self.ca.set_pv_value(MOTOR_DIR_BASE.format(i), 0)
             self.ca.set_pv_value(LIMIT_FWD.format(i), 1)
             self.ca.set_pv_value(LIMIT_BWD.format(i), 1)
             self.ca.set_pv_value(MOTOR_STOP_BASE.format(i), 1)
@@ -107,6 +109,21 @@ class TcIocTests(unittest.TestCase):
     def test_WHEN_moving_backwards_THEN_motor_record_in_backwards_direction(self):
         self.ca.set_pv_value(MOTOR_SP, -2)
         self.ca.assert_that_pv_is(MOTOR_DIR, 0)
+        
+    def test_WHEN_commanded_dir_is_changed_at_motor_record_THEN_motor_record_flips_limits(self):
+        # Set dir on motor record
+        self.ca.set_pv_value(MOTOR_DIR_BASE.format(1), 1)
+        # Enable fwd limit switch
+        self.ca.set_pv_value(LIMIT_FWD.format(1), 0)
+        # Assert that lower (opposite) limit switch is shown
+        self.ca.assert_that_pv_is(MOTOR_SP + ".LLS", 1)
+        
+    def test_WHEN_commanded_dir_is_changed_at_motor_record_THEN_motor_record_flips_reported_direction(self):
+        # Set dir on motor record then send a positive user SP
+        self.ca.set_pv_value(MOTOR_DIR_BASE.format(1), 1)
+        self.ca.set_pv_value(MOTOR_SP, 2)
+        # Assert that we are driving negatively
+        self.ca.assert_that_pv_is(MOTOR_DIR, 1)
 
     def test_WHEN_moving_THEN_can_stop_motion(self):
         self.ca.set_pv_value(MOTOR_SP, 100)
