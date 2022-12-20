@@ -23,7 +23,9 @@ IOCS = [
         "name": DEVICE_PREFIX,
         "directory": get_default_ioc_dir("TC"),
         "macros": {
-            "TPY_FILE": "tc_project_app.tpy",
+            "NUM_AXES": "9",
+            "IP_AD":"127.0.0.1",
+            "AMS_ID":"127.0.0.1.1.1",
 			"PLC_VERSION": "1",
             "MTRCTRL": "1",
             "TWINCATCONFIG": os.path.join(BECKHOFF_ROOT, EMULATOR_NAME, "solution", "tc_project_app").replace(os.path.sep, "/")
@@ -64,7 +66,7 @@ MOTOR_2_SP = MOTOR_SP_BASE.format(2)
 MOTOR_2_RBV = MOTOR_RBV_BASE.format(2)
 
 ENABLE = DEVICE_PREFIX + ":ASTAXES_{}:STCONTROL-BENABLE"
-ENABLED = DEVICE_PREFIX + ":ASTAXES_{}:STSTATUS-BENABLED.RVAL"
+ENABLED = DEVICE_PREFIX + ":ASTAXES_{}:STSTATUS-BENABLED"
 LIMIT_FWD = DEVICE_PREFIX + ":ASTAXES_{}:STINPUTS-BLIMITFWD"
 LIMIT_BWD = DEVICE_PREFIX + ":ASTAXES_{}:STINPUTS-BLIMITBWD"
 RESET = DEVICE_PREFIX + ":ASTAXES_{}:STCONTROL-BRESET"
