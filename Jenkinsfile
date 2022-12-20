@@ -42,7 +42,7 @@ pipeline {
             call c:\\Instrument\\apps\\epics\\config_env.bat
 			set PYTHONUNBUFFERED=1
 		    @echo Starting tests
-		    call run_tests.bat
+		    call run_tests.bat --tm DEVSIM
 		    rmdir c:\\Instrument\\apps\\epics
             """
         }
