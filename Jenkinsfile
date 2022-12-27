@@ -43,7 +43,9 @@ pipeline {
 			set PYTHONUNBUFFERED=1
 		    @echo Starting tests
 		    call run_tests.bat -tm DEVSIM
+		    set errcode=%errorlevel%
 		    rmdir c:\\Instrument\\apps\\epics
+		    if %errcode% neq 0 exit /b %errcode%
             """
         }
 	   }
