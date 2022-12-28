@@ -41,6 +41,7 @@ pipeline {
 			mklink /j c:\\Instrument\\apps\\epics C:\\Jenkins\\workspace\\EPICS_IOC_Windows10_x64_CLEAN
             call c:\\Instrument\\apps\\epics\\config_env.bat
 			set PYTHONUNBUFFERED=1
+			del /q C:\\Instrument\\Var\\logs\\IOCTestFramework\\*.*
 		    @echo Starting tests
 		    call run_tests.bat -tm DEVSIM
 		    set errcode=%errorlevel%
