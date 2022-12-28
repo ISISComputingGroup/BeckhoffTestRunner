@@ -55,6 +55,11 @@ pipeline {
   
   post {
     always {
+      bat """
+          robocopy "C:\\Instrument\\Var\\logs\\IOCTestFramework" "%WORKSPACE%\\test-logs" /E /R:2 /MT /NFL /NDL /NP /NC /NS /LOG:NUL
+          exit /b 0
+      """
+      archiveArtifacts artifacts: 'test-logs/*.log', caseSensitive: false
       junit "test-reports/**/*.xml"
     }	
     failure {
@@ -70,5 +75,6 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr:'5', daysToKeepStr: '7'))
     timeout(time: 60, unit: 'MINUTES')
     disableConcurrentBuilds()
+    timestamps()
   }
 }
