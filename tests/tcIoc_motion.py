@@ -12,6 +12,9 @@ from utils.ioc_launcher import get_default_ioc_dir, EPICS_TOP
 from utils.testing import skip_if_recsim, get_running_lewis_and_ioc, parameterized_list
 from time import sleep
 
+
+IP_AD = "127.0.0.1"
+AMS_ID = "127.0.0.1.1.1"
 # Device prefix
 DEVICE_PREFIX = "TC_01"
 EMULATOR_NAME = "PLC_solution"
@@ -24,8 +27,8 @@ IOCS = [
         "directory": get_default_ioc_dir("TC"),
         "macros": {
             "NUM_AXES": "9",
-            "IP_AD":"127.0.0.1",
-            "AMS_ID":"127.0.0.1.1.1",
+            "IP_AD": IP_AD,
+            "AMS_ID": AMS_ID,
 			"PLC_VERSION": "1",
             "MTRCTRL": "1",
             "TWINCATCONFIG": os.path.join(BECKHOFF_ROOT, EMULATOR_NAME, "solution", "tc_project_app").replace(os.path.sep, "/")
